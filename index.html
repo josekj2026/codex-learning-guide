@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Learn Codex: Step-by-Step Guide</title>
+  <style>
+    :root {
+      --ink: #17201c;
+      --muted: #5a645f;
+      --paper: #f7f4ec;
+      --panel: #ffffff;
+      --line: #d9d2c2;
+      --green: #2c6e49;
+      --teal: #247b7b;
+      --rose: #b84a62;
+      --gold: #b37a1f;
+      --shadow: 0 18px 50px rgba(36, 45, 39, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background:
+        linear-gradient(90deg, rgba(44, 110, 73, 0.07) 1px, transparent 1px),
+        linear-gradient(rgba(44, 110, 73, 0.05) 1px, transparent 1px),
+        var(--paper);
+      background-size: 28px 28px;
+      line-height: 1.6;
+    }
+
+    a {
+      color: var(--green);
+      text-decoration-thickness: 2px;
+      text-underline-offset: 3px;
+    }
+
+    .page {
+      min-height: 100vh;
+    }
+
+    .hero {
+      min-height: 84vh;
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr);
+      align-items: center;
+      gap: clamp(28px, 5vw, 76px);
+      padding: clamp(28px, 5vw, 72px);
+      border-bottom: 1px solid var(--line);
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.88), rgba(247, 244, 236, 0.5)),
+        radial-gradient(circle at 15% 20%, rgba(36, 123, 123, 0.14), transparent 34%),
+        radial-gradient(circle at 88% 76%, rgba(184, 74, 98, 0.12), transparent 30%);
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin: 0 0 18px;
+      color: var(--teal);
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 36px;
+      height: 2px;
+      background: var(--teal);
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 760px;
+      font-size: clamp(3.1rem, 8vw, 7.8rem);
+      line-height: 0.92;
+      letter-spacing: 0;
+    }
+
+    .subtitle {
+      max-width: 660px;
+      margin: 24px 0 0;
+      font-size: clamp(1.05rem, 2vw, 1.32rem);
+      color: var(--muted);
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 34px;
+    }
+
+    .button {
+      display: inline-flex;
+      min-height: 44px;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      border-radius: 8px;
+      border: 1px solid var(--ink);
+      padding: 10px 16px;
+      background: var(--ink);
+      color: #fff;
+      font-weight: 800;
+      text-decoration: none;
+      box-shadow: 0 8px 20px rgba(23, 32, 28, 0.18);
+    }
+
+    .button.secondary {
+      background: rgba(255, 255, 255, 0.68);
+      color: var(--ink);
+      box-shadow: none;
+    }
+
+    .map {
+      position: relative;
+      min-height: 470px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fffdf8;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .map::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(90deg, rgba(23, 32, 28, 0.06) 1px, transparent 1px),
+        linear-gradient(rgba(23, 32, 28, 0.06) 1px, transparent 1px);
+      background-size: 36px 36px;
+    }
+
+    .node {
+      position: absolute;
+      width: min(36vw, 170px);
+      min-height: 78px;
+      padding: 14px;
+      border: 2px solid var(--ink);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: 7px 7px 0 rgba(23, 32, 28, 0.14);
+      font-weight: 850;
+      line-height: 1.2;
+    }
+
+    .node span {
+      display: block;
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 0.82rem;
+      font-weight: 650;
+    }
+
+    .node.one { left: 8%; top: 10%; border-color: var(--green); }
+    .node.two { right: 9%; top: 18%; border-color: var(--teal); }
+    .node.three { left: 15%; top: 45%; border-color: var(--gold); }
+    .node.four { right: 14%; top: 61%; border-color: var(--rose); }
+
+    .map-line {
+      position: absolute;
+      height: 3px;
+      background: var(--ink);
+      opacity: 0.22;
+      transform-origin: left center;
+    }
+
+    .line-a { left: 33%; top: 27%; width: 34%; transform: rotate(8deg); }
+    .line-b { left: 30%; top: 43%; width: 36%; transform: rotate(130deg); }
+    .line-c { left: 35%; top: 66%; width: 34%; transform: rotate(12deg); }
+
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 12px clamp(18px, 5vw, 72px);
+      border-bottom: 1px solid var(--line);
+      background: rgba(247, 244, 236, 0.92);
+      backdrop-filter: blur(14px);
+    }
+
+    nav a {
+      flex: 0 0 auto;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 8px 12px;
+      background: rgba(255, 255, 255, 0.62);
+      color: var(--ink);
+      font-size: 0.9rem;
+      font-weight: 750;
+      text-decoration: none;
+    }
+
+    main {
+      padding: clamp(28px, 5vw, 72px);
+    }
+
+    section {
+      max-width: 1180px;
+      margin: 0 auto clamp(44px, 8vw, 96px);
+    }
+
+    .section-head {
+      display: grid;
+      grid-template-columns: minmax(0, 0.75fr) minmax(280px, 0.45fr);
+      gap: 32px;
+      align-items: end;
+      margin-bottom: 26px;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: clamp(2rem, 5vw, 4.2rem);
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    .section-head p,
+    .intro {
+      margin: 0;
+      color: var(--muted);
+      font-size: 1.02rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .two {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.78);
+      padding: 22px;
+      box-shadow: 0 10px 30px rgba(36, 45, 39, 0.07);
+    }
+
+    .card h3 {
+      margin: 0 0 10px;
+      font-size: 1.25rem;
+      line-height: 1.2;
+      letter-spacing: 0;
+    }
+
+    .card p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .tag {
+      display: inline-block;
+      margin-bottom: 14px;
+      border-radius: 999px;
+      padding: 4px 10px;
+      background: rgba(44, 110, 73, 0.1);
+      color: var(--green);
+      font-size: 0.8rem;
+      font-weight: 850;
+    }
+
+    .steps {
+      display: grid;
+      gap: 14px;
+      counter-reset: step;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 76px minmax(0, 1fr);
+      gap: 18px;
+      align-items: start;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.82);
+    }
+
+    .step::before {
+      counter-increment: step;
+      content: counter(step, decimal-leading-zero);
+      display: grid;
+      width: 58px;
+      height: 58px;
+      place-items: center;
+      border: 2px solid var(--ink);
+      border-radius: 50%;
+      color: var(--ink);
+      font-weight: 900;
+      background: #fff;
+    }
+
+    .step h3 {
+      margin: 0 0 8px;
+      font-size: 1.35rem;
+      letter-spacing: 0;
+    }
+
+    .step p {
+      margin: 0 0 12px;
+      color: var(--muted);
+    }
+
+    .step ul,
+    .card ul {
+      margin: 0;
+      padding-left: 20px;
+      color: var(--muted);
+    }
+
+    code,
+    pre {
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+    }
+
+    pre {
+      overflow-x: auto;
+      margin: 14px 0 0;
+      border-radius: 8px;
+      padding: 16px;
+      background: #18231f;
+      color: #f8f3e8;
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    .practice {
+      display: grid;
+      grid-template-columns: 0.55fr 0.45fr;
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .practice-panel {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 26px;
+      background: #fff;
+    }
+
+    .checklist {
+      display: grid;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .checklist li {
+      display: grid;
+      grid-template-columns: 28px minmax(0, 1fr);
+      gap: 10px;
+      align-items: start;
+      color: var(--muted);
+    }
+
+    .checklist li::before {
+      content: "";
+      width: 18px;
+      height: 18px;
+      margin-top: 4px;
+      border: 2px solid var(--green);
+      border-radius: 4px;
+      background: linear-gradient(135deg, transparent 52%, rgba(44, 110, 73, 0.28) 52%);
+    }
+
+    .source-note {
+      max-width: 1180px;
+      margin: 0 auto;
+      border-top: 1px solid var(--line);
+      padding: 26px 0 0;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    @media (max-width: 880px) {
+      .hero,
+      .section-head,
+      .practice {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        min-height: auto;
+      }
+
+      .map {
+        min-height: 390px;
+      }
+
+      .grid,
+      .two {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .hero,
+      main {
+        padding: 24px 18px;
+      }
+
+      h1 {
+        font-size: 3rem;
+      }
+
+      .node {
+        width: 145px;
+        font-size: 0.92rem;
+      }
+
+      .step {
+        grid-template-columns: 1fr;
+      }
+
+      .step::before {
+        width: 48px;
+        height: 48px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="hero">
+      <div>
+        <p class="eyebrow">A practical learning path</p>
+        <h1>Learn Codex step by step</h1>
+        <p class="subtitle">
+          Build the habits that make Codex useful: give it context, keep tasks scoped,
+          validate the work, review the diff, and turn repeated workflows into durable guidance.
+        </p>
+        <div class="hero-actions" aria-label="Page actions">
+          <a class="button" href="#path">Start the guide</a>
+          <a class="button secondary" href="#prompts">Copy prompt patterns</a>
+        </div>
+      </div>
+
+      <div class="map" aria-label="Learning path illustration">
+        <div class="map-line line-a"></div>
+        <div class="map-line line-b"></div>
+        <div class="map-line line-c"></div>
+        <div class="node one">Orient<span>Surfaces, threads, permissions</span></div>
+        <div class="node two">Prompt<span>Goal, context, constraints, done</span></div>
+        <div class="node three">Verify<span>Tests, browser, review pane</span></div>
+        <div class="node four">Customize<span>AGENTS.md, skills, MCP</span></div>
+      </div>
+    </header>
+
+    <nav aria-label="Guide sections">
+      <a href="#overview">Overview</a>
+      <a href="#path">Steps</a>
+      <a href="#prompts">Prompts</a>
+      <a href="#practice">Practice</a>
+      <a href="#customize">Customize</a>
+      <a href="#checklist">Checklist</a>
+    </nav>
+
+    <main>
+      <section id="overview">
+        <div class="section-head">
+          <h2>What Codex is for</h2>
+          <p>
+            Codex is OpenAI's coding agent for software development. Use it to write,
+            understand, review, debug, test, and automate work across your projects.
+          </p>
+        </div>
+        <div class="grid">
+          <article class="card">
+            <span class="tag">Local work</span>
+            <h3>Work in your project</h3>
+            <p>
+              Local threads read and edit your files, run commands, and report what changed.
+              Use them when you want tight feedback in the repo on your machine.
+            </p>
+          </article>
+          <article class="card">
+            <span class="tag">Isolated work</span>
+            <h3>Use worktrees for experiments</h3>
+            <p>
+              Worktree threads isolate changes from your current checkout, which is useful
+              for parallel tasks, risky refactors, or trying an idea without disturbing your main work.
+            </p>
+          </article>
+          <article class="card">
+            <span class="tag">Remote work</span>
+            <h3>Delegate to cloud tasks</h3>
+            <p>
+              Cloud threads run in an isolated environment after your repo is connected.
+              They are useful for parallel work, PR follow-ups, or tasks started away from your machine.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section id="path">
+        <div class="section-head">
+          <h2>The step-by-step path</h2>
+          <p>
+            Move through these in order. Each step gives you a working habit,
+            not just a feature name.
+          </p>
+        </div>
+
+        <div class="steps">
+          <article class="step">
+            <div>
+              <h3>Choose the right surface</h3>
+              <p>
+                Start where the work naturally lives. Use the app for parallel project work,
+                the IDE extension when open files matter, and the CLI when you want terminal-first control.
+              </p>
+              <ul>
+                <li>Use local mode for direct edits in the current project.</li>
+                <li>Use worktree mode for isolated experiments.</li>
+                <li>Use cloud mode when the work can run remotely from a connected repository.</li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="step">
+            <div>
+              <h3>Prompt with four ingredients</h3>
+              <p>
+                Give Codex the goal, context, constraints, and definition of done. This keeps it scoped
+                and makes the result easier to verify.
+              </p>
+              <pre><code>Goal: Fix the settings save bug.
+Context: The issue appears on /settings. Start with @src/settings.
+Constraints: Keep the API shape unchanged.
+Done when: Reproduce the bug, patch it, add a regression test, and run the smallest relevant checks.</code></pre>
+            </div>
+          </article>
+
+          <article class="step">
+            <div>
+              <h3>Use planning when the task is fuzzy</h3>
+              <p>
+                For complex or unclear work, ask Codex to plan first. In the Codex app, toggle plan mode with
+                <code>/plan</code> or Shift+Tab. Ask it to interview you when the idea is still rough.
+              </p>
+              <ul>
+                <li>Ask for assumptions and risks before implementation.</li>
+                <li>Approve the plan only after the scope feels reviewable.</li>
+                <li>Turn long work into a clear <code>/goal</code> when there is a measurable finish line.</li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="step">
+            <div>
+              <h3>Let Codex investigate before editing</h3>
+              <p>
+                Good Codex work usually starts with reading files, searching the codebase, running a repro,
+                or inspecting terminal output. Ask for that explicitly when correctness matters.
+              </p>
+              <pre><code>Before editing, find the relevant call sites and explain the likely cause.
+Then make the smallest patch and tell me exactly how you verified it.</code></pre>
+            </div>
+          </article>
+
+          <article class="step">
+            <div>
+              <h3>Verify every meaningful change</h3>
+              <p>
+                Ask Codex to run tests, lint, type checks, or a manual reproduction. For web apps, use the
+                in-app browser to preview local routes, leave visual comments, and verify rendered behavior.
+              </p>
+              <ul>
+                <li>Prefer the smallest relevant test suite first.</li>
+                <li>Use the integrated terminal for dev servers and checks.</li>
+                <li>Ask Codex to report commands, results, and any checks it could not run.</li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="step">
+            <div>
+              <h3>Review the diff like a teammate</h3>
+              <p>
+                Use the review pane to inspect uncommitted changes, last-turn changes, or branch changes.
+                Leave inline comments on specific lines, then ask Codex to address them with a narrow scope.
+              </p>
+              <pre><code>Address the inline comments only.
+Keep the public API unchanged and rerun the same checks afterward.</code></pre>
+            </div>
+          </article>
+
+          <article class="step">
+            <div>
+              <h3>Save repeated guidance in AGENTS.md</h3>
+              <p>
+                When you find yourself repeating setup commands, test expectations, repo conventions,
+                or review rules, put them in <code>AGENTS.md</code>. Keep it short and practical.
+              </p>
+              <ul>
+                <li>Add repo layout and important folders.</li>
+                <li>List build, test, lint, and format commands.</li>
+                <li>Record the review standards and "done" criteria your team expects.</li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="step">
+            <div>
+              <h3>Grow into skills and MCP</h3>
+              <p>
+                Use skills for repeatable workflows with rich instructions. Use MCP when Codex needs live
+                tools or external systems such as documentation, issue trackers, design files, logs, or GitHub.
+              </p>
+              <ul>
+                <li>Start with <code>AGENTS.md</code> for repo rules.</li>
+                <li>Create a skill when the workflow repeats across tasks.</li>
+                <li>Add MCP when the workflow needs outside data or actions.</li>
+              </ul>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section id="prompts">
+        <div class="section-head">
+          <h2>Prompt patterns</h2>
+          <p>
+            These are templates you can adapt. The strongest prompts give Codex a way to check its own work.
+          </p>
+        </div>
+
+        <div class="grid two">
+          <article class="card">
+            <h3>Explain unfamiliar code</h3>
+            <pre><code>Read @path/to/file and nearby callers.
+Explain the request flow, the data that is validated, and the risky assumptions.
+End with a short list of files I should inspect next.</code></pre>
+          </article>
+          <article class="card">
+            <h3>Fix a reproducible bug</h3>
+            <pre><code>Bug: [what happens]
+Repro: [numbered steps]
+Constraints: [what must not change]
+Done when: reproduce it, fix it, add a regression test if feasible, and run checks.</code></pre>
+          </article>
+          <article class="card">
+            <h3>Add a feature safely</h3>
+            <pre><code>Implement [feature] in [area].
+Follow existing patterns in [files].
+Keep the change small. Add tests for the new behavior.
+Before finishing, review the diff for regressions.</code></pre>
+          </article>
+          <article class="card">
+            <h3>Use the browser for UI work</h3>
+            <pre><code>Use @Browser to open http://localhost:3000/[route].
+Verify the [state] on desktop and mobile.
+Fix only the visible issue and keep the existing layout structure.</code></pre>
+          </article>
+        </div>
+      </section>
+
+      <section id="practice">
+        <div class="section-head">
+          <h2>A 7-day practice plan</h2>
+          <p>
+            Spend 20 to 40 minutes per day. The point is to build judgment about when to steer,
+            when to let Codex work, and how to verify the result.
+          </p>
+        </div>
+
+        <div class="practice">
+          <div class="practice-panel">
+            <h3>Daily missions</h3>
+            <ul class="checklist">
+              <li><strong>Day 1:</strong> Ask Codex to explain a small project and list the main files.</li>
+              <li><strong>Day 2:</strong> Give it a tiny bug or TODO and require a verification command.</li>
+              <li><strong>Day 3:</strong> Use <code>/plan</code> on a fuzzy task before allowing edits.</li>
+              <li><strong>Day 4:</strong> Ask Codex to add or improve one test around existing behavior.</li>
+              <li><strong>Day 5:</strong> Use the review pane and leave one inline comment for Codex to fix.</li>
+              <li><strong>Day 6:</strong> Write a starter <code>AGENTS.md</code> with commands and conventions.</li>
+              <li><strong>Day 7:</strong> Repeat a previous task with the new guidance and compare the result.</li>
+            </ul>
+          </div>
+          <div class="practice-panel">
+            <h3>What to notice</h3>
+            <p class="intro">
+              Codex improves when the environment is explicit. Track what it needed to ask,
+              what it guessed correctly, what checks caught issues, and which instructions you repeated.
+            </p>
+            <pre><code>After each session, ask:
+1. What did I forget to tell you?
+2. Which command verified the result?
+3. What should go into AGENTS.md for next time?</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <section id="customize">
+        <div class="section-head">
+          <h2>Customization ladder</h2>
+          <p>
+            Start simple. Add durable machinery only when it removes repeated friction.
+          </p>
+        </div>
+
+        <div class="grid">
+          <article class="card">
+            <span class="tag">First</span>
+            <h3>Prompt</h3>
+            <p>
+              Use the prompt for one-off task details, temporary constraints, exact files,
+              acceptance criteria, and the checks you want run this time.
+            </p>
+          </article>
+          <article class="card">
+            <span class="tag">Next</span>
+            <h3>AGENTS.md</h3>
+            <p>
+              Use <code>AGENTS.md</code> for repo conventions, commands, review expectations,
+              architectural boundaries, and definitions of done.
+            </p>
+          </article>
+          <article class="card">
+            <span class="tag">Then</span>
+            <h3>config.toml</h3>
+            <p>
+              Use configuration for durable defaults such as model choice, reasoning,
+              sandbox settings, approvals, profiles, feature flags, and MCP setup.
+            </p>
+          </article>
+          <article class="card">
+            <span class="tag">Repeatable</span>
+            <h3>Skills</h3>
+            <p>
+              Use skills when a workflow needs reusable instructions, examples, scripts,
+              references, or a clear trigger phrase.
+            </p>
+          </article>
+          <article class="card">
+            <span class="tag">Connected</span>
+            <h3>MCP</h3>
+            <p>
+              Use MCP when Codex needs live capabilities from external systems:
+              docs, tickets, designs, logs, browsers, or hosted development tools.
+            </p>
+          </article>
+          <article class="card">
+            <span class="tag">Ongoing</span>
+            <h3>Automations</h3>
+            <p>
+              Use automations for recurring checks, reminders, monitors, or thread wake-ups
+              where Codex should come back on a schedule.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section id="checklist">
+        <div class="section-head">
+          <h2>Before you trust the result</h2>
+          <p>
+            A good Codex session ends with evidence. This checklist keeps the finish line concrete.
+          </p>
+        </div>
+
+        <div class="grid two">
+          <article class="card">
+            <h3>Accept the change when</h3>
+            <ul>
+              <li>The requested behavior is implemented or the limitation is clearly explained.</li>
+              <li>The diff is scoped to the task and follows local patterns.</li>
+              <li>Relevant tests, lint, type checks, or manual repro steps were run.</li>
+              <li>Codex reported any checks it could not run.</li>
+              <li>You reviewed the diff and asked for follow-up fixes where needed.</li>
+            </ul>
+          </article>
+          <article class="card">
+            <h3>Ask for another pass when</h3>
+            <ul>
+              <li>The answer is broad but lacks file references or verification.</li>
+              <li>The patch changes unrelated files or invents a new pattern.</li>
+              <li>The test plan is vague, skipped, or disconnected from the bug.</li>
+              <li>Codex seems blocked by missing context you can provide.</li>
+              <li>You repeated an instruction that belongs in <code>AGENTS.md</code>.</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <p class="source-note">
+        Content based on the official OpenAI Codex manual fetched on June 13, 2026,
+        including the Codex overview, best practices, prompting, app features,
+        in-app browser, review pane, AGENTS.md, skills, and MCP sections.
+        Useful starting links:
+        <a href="https://developers.openai.com/codex/overview">Codex overview</a>,
+        <a href="https://developers.openai.com/codex/learn/best-practices">best practices</a>,
+        <a href="https://developers.openai.com/codex/prompting">prompting</a>,
+        <a href="https://developers.openai.com/codex/guides/agents-md">AGENTS.md</a>.
+      </p>
+    </main>
+  </div>
+</body>
+</html>

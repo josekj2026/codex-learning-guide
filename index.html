@@ -239,6 +239,16 @@
       font-size: 1.02rem;
     }
 
+    .checklist-head {
+      grid-template-columns: minmax(0, 0.78fr);
+      gap: 14px;
+      align-items: start;
+    }
+
+    .checklist-head p {
+      max-width: 660px;
+    }
+
     .grid {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -373,6 +383,16 @@
       gap: 10px;
       align-items: start;
       color: var(--muted);
+    }
+
+    .checklist li > span {
+      min-width: 0;
+    }
+
+    .checklist li strong {
+      color: var(--muted);
+      margin-right: 6px;
+      white-space: nowrap;
     }
 
     .checklist li::before {
@@ -690,13 +710,13 @@ Fix only the visible issue and keep the existing layout structure.</code></pre>
           <div class="practice-panel">
             <h3>Daily missions</h3>
             <ul class="checklist">
-              <li><strong>Day 1:</strong> Ask Codex to explain a small project and list the main files.</li>
-              <li><strong>Day 2:</strong> Give it a tiny bug or TODO and require a verification command.</li>
-              <li><strong>Day 3:</strong> Use <code>/plan</code> on a fuzzy task before allowing edits.</li>
-              <li><strong>Day 4:</strong> Ask Codex to add or improve one test around existing behavior.</li>
-              <li><strong>Day 5:</strong> Use the review pane and leave one inline comment for Codex to fix.</li>
-              <li><strong>Day 6:</strong> Write a starter <code>AGENTS.md</code> with commands and conventions.</li>
-              <li><strong>Day 7:</strong> Repeat a previous task with the new guidance and compare the result.</li>
+              <li><span><strong>Day 1:</strong> Ask Codex to explain a small project and list the main files.</span></li>
+              <li><span><strong>Day 2:</strong> Give it a tiny bug or TODO and require a verification command.</span></li>
+              <li><span><strong>Day 3:</strong> Use <code>/plan</code> on a fuzzy task before allowing edits.</span></li>
+              <li><span><strong>Day 4:</strong> Ask Codex to add or improve one test around existing behavior.</span></li>
+              <li><span><strong>Day 5:</strong> Use the review pane and leave one inline comment for Codex to fix.</span></li>
+              <li><span><strong>Day 6:</strong> Write a starter <code>AGENTS.md</code> with commands and conventions.</span></li>
+              <li><span><strong>Day 7:</strong> Repeat a previous task with the new guidance and compare the result.</span></li>
             </ul>
           </div>
           <div class="practice-panel">
@@ -774,7 +794,7 @@ Fix only the visible issue and keep the existing layout structure.</code></pre>
       </section>
 
       <section id="checklist">
-        <div class="section-head">
+        <div class="section-head checklist-head">
           <h2>Before you trust the result</h2>
           <p>
             A good Codex session ends with evidence. This checklist keeps the finish line concrete.
